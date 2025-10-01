@@ -127,7 +127,7 @@ nav a:hover { color: var(--pumpkin); }
   width: 100%;
   position: relative;
   padding: 2rem 1rem;
-  z-index: 2; /* above fog layers */
+  z-index: 2;
 }
 .chapter-title {
   font-family: var(--font-head);
@@ -137,6 +137,19 @@ nav a:hover { color: var(--pumpkin); }
   margin-bottom: 2rem;
   text-shadow: 0 0 20px rgba(255, 117, 24, 0.5);
 }
+
+.chapter-title-end{
+  font-family: var(--font-head);
+  font-size: 2rem;
+  color: var(--pumpkin);
+  text-align: center;
+  text-shadow: 0 0 20px rgba(255, 117, 24, 0.5);
+  opacity: 0;
+  animation: titleFadeIn 0.8s ease-out forwards;
+  animation-delay: 3.5s;
+  margin: 0;
+}
+
 .chapter-note {
   opacity: 0.95;
   margin: 1rem 0 2rem;
@@ -219,19 +232,39 @@ nav a:hover { color: var(--pumpkin); }
 .tomb2 { left: 45%; animation-delay: 1s; }
 .tomb3 { right: 15%; animation-delay: 2s; }
 
-
-.zombie {
+/* Zombie - Shadow Variant */
+.zombie-shadow {
   position: absolute;
   bottom: 12%;
   right: -10%;         
-  font-size: 6rem;
+  font-size: 10rem;
   animation: shambleAcross 10s linear infinite;
-  filter: hue-rotate(0deg);
-}
-.zombie-page3 {
-  animation-duration: 12s;  
+  filter: brightness(0) opacity(0.6);
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
+/* Jump Scare Page */
+.jumpscare-page {
+  background: #000;
+}
+
+.jumpscare-zombie {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  font-size: 20rem;
+  z-index: 10;
+  animation: jumpScare 2s ease-out forwards, zombieFadeOut 0.5s ease-out forwards;
+  animation-delay: 1.5s, 3.5s;
+}
+
+.jumpscare-page .pager-row {
+  opacity: 0;
+  animation: buttonsAppear 0.5s ease-out forwards;
+  animation-delay: 3.5s;
+  align-items: center;
+}
 
 .fog-page { position: relative; }
 
@@ -260,7 +293,13 @@ nav a:hover { color: var(--pumpkin); }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .smoke, .zombie, .bat, .blood-hand, .floating-ghost { animation: none !important; }
+  .smoke, .zombie-shadow, .bat, .blood-hand, .floating-ghost, .jumpscare-zombie { 
+    animation: none !important; 
+  }
+  .jumpscare-zombie {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
 /* Footer */
@@ -275,7 +314,7 @@ footer {
 footer p { margin: .3rem 0; }
 .tagline { font-style: italic; color: var(--pumpkin); }
 
-/* Animations (shared) */
+/* Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
@@ -305,12 +344,38 @@ footer p { margin: .3rem 0; }
 }
 @keyframes shambleAcross {
   0%   { transform: translateX(0) rotate(0deg); right: -10%; opacity: 0; }
-  10%  { opacity: 1; }
+  10%  { opacity: 0.6; }
   50%  { transform: translateX(-55vw) rotate(-3deg); }
   80%  { transform: translateX(-75vw) rotate(2deg); }
-  100% { transform: translateX(-90vw) rotate(0deg); opacity: 0.6; }
+  100% { transform: translateX(-90vw) rotate(0deg); opacity: 0.4; }
 }
 @keyframes drift {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-35%); }
+}
+@keyframes titleFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes jumpScare {
+  0% { 
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
+  }
+  60% { 
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+  } 
+  100% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes buttonsAppear {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes zombieFadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
