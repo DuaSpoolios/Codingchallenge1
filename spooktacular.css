@@ -6,6 +6,10 @@
   --ghost:#FFF;
   --font-head:'Creepster', cursive;
   --font-body:'Roboto', sans-serif;
+
+  --fog-1: rgba(255,255,255,0.22);
+  --fog-2: rgba(255,255,255,0.18);
+  --fog-3: rgba(255,255,255,0.14);
 }
 
 html { scroll-behavior: smooth; }
@@ -17,7 +21,6 @@ body {
   text-align: center;
 }
 
-/* Header */
 header {
   position: sticky; 
   top: 0;
@@ -26,6 +29,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1000;
 }
 .logo {
   font-family: var(--font-head);
@@ -40,7 +44,7 @@ nav a {
 }
 nav a:hover { color: var(--pumpkin); }
 
-/* Page System */
+
 .page { 
   display: none;
   min-height: 90vh;
@@ -49,6 +53,8 @@ nav a:hover { color: var(--pumpkin); }
   position: relative;
 }
 .page:target { display: flex; }
+
+
 .intro-page { 
   display: flex;
   background: linear-gradient(#111, var(--witch-purple));
@@ -63,6 +69,7 @@ nav a:hover { color: var(--pumpkin); }
 .hero {
   max-width: 700px;
   position: relative;
+  padding: 2rem 1rem;
 }
 .spooky-title {
   font-family: var(--font-head);
@@ -74,13 +81,11 @@ nav a:hover { color: var(--pumpkin); }
   font-size: 1.4rem;
   margin-bottom: 2rem;
 }
-
 .floating-ghost {
   font-size: 5rem;
   animation: float 3s ease-in-out infinite;
   margin-bottom: 2rem;
 }
-
 .start-button {
   display: inline-block;
   padding: 1rem 2rem;
@@ -96,19 +101,18 @@ nav a:hover { color: var(--pumpkin); }
   transform: translateY(-3px);
 }
 
+
 .blood-hand {
   position: absolute;
   opacity: 0;
   animation: fadeInOut 7s ease-in-out infinite;
 }
-
 .hand1 {
   left: 5%;
   bottom: 10%;
   width: 160px;             
   transform: rotate(-15deg); 
 }
-
 .hand2 {
   right: 10%;
   top: 15%;
@@ -117,23 +121,26 @@ nav a:hover { color: var(--pumpkin); }
   animation-delay: 3s;     
 }
 
-/* Story Page */
+/* Generic story layout */
 .story-container {
   max-width: 900px;
   width: 100%;
   position: relative;
-  padding: 2rem;
+  padding: 2rem 1rem;
+  z-index: 2; /* above fog layers */
 }
-
 .chapter-title {
   font-family: var(--font-head);
   font-size: 2rem;
   color: var(--pumpkin);
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   text-shadow: 0 0 20px rgba(255, 117, 24, 0.5);
 }
-
+.chapter-note {
+  opacity: 0.95;
+  margin: 1rem 0 2rem;
+}
 .scene {
   position: relative;
   height: 60vh;
@@ -142,6 +149,28 @@ nav a:hover { color: var(--pumpkin); }
   justify-content: center;
   align-items: flex-end;
   padding-bottom: 4rem;
+}
+
+/* Pager row */
+.pager-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.nav-button {
+  display: inline-block;
+  padding: .8rem 1.4rem;
+  background: var(--witch-purple);
+  color: var(--ghost);
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 700;
+  transition: background .2s, transform .2s;
+}
+.nav-button:hover {
+  background: var(--pumpkin);
+  transform: translateY(-2px);
 }
 
 /* Moon */
@@ -159,20 +188,17 @@ nav a:hover { color: var(--pumpkin); }
   font-size: 3rem;
   opacity: 0.8;
 }
-
 .bat1 {
   top: 20%;
   left: 10%;
   animation: flyBat1 8s ease-in-out infinite;
 }
-
 .bat2 {
   top: 30%;
   left: 70%;
   animation: flyBat2 10s ease-in-out infinite;
   animation-delay: 2s;
 }
-
 .bat3 {
   top: 15%;
   left: 40%;
@@ -189,26 +215,52 @@ nav a:hover { color: var(--pumpkin); }
   transition: transform 0.3s ease, filter 0.3s ease;
   animation: wobble 3s ease-in-out infinite;
 }
-
 .tomb1 { left: 15%; }
-.tomb2 { 
-  left: 45%;
-  animation-delay: 1s;
-}
-.tomb3 { 
-  right: 15%;
-  animation-delay: 2s;
-}
+.tomb2 { left: 45%; animation-delay: 1s; }
+.tomb3 { right: 15%; animation-delay: 2s; }
 
-/* Zombie */
+
 .zombie {
   position: absolute;
-  bottom: 15%;
-  left: 60%;
+  bottom: 12%;
+  right: -10%;         
   font-size: 6rem;
-  animation: shamble 6s ease-in-out infinite;
+  animation: shambleAcross 10s linear infinite;
   filter: hue-rotate(0deg);
-  transition: filter 0.5s ease;
+}
+.zombie-page3 {
+  animation-duration: 12s;  
+}
+
+
+.fog-page { position: relative; }
+
+.smoke {
+  position: absolute;
+  inset: 0 0 0 0;
+  pointer-events: none;
+  z-index: 1; 
+  background:
+    radial-gradient(60vw 25vh at 20% 85%, var(--fog-1), transparent 70%),
+    radial-gradient(55vw 22vh at 70% 90%, var(--fog-2), transparent 72%),
+    radial-gradient(45vw 18vh at 40% 88%, var(--fog-3), transparent 75%);
+  filter: blur(14px);
+  animation: drift 90s linear infinite;
+  opacity: 1; 
+}
+.smoke2 {
+  animation-duration: 120s;
+  filter: blur(18px);
+  opacity: .95;
+}
+.smoke3 {
+  animation-duration: 150s;
+  filter: blur(22px);
+  opacity: .9;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .smoke, .zombie, .bat, .blood-hand, .floating-ghost { animation: none !important; }
 }
 
 /* Footer */
@@ -221,48 +273,44 @@ footer {
   border-top: 2px solid var(--pumpkin);
 }
 footer p { margin: .3rem 0; }
-.tagline {
-  font-style: italic;
-  color: var(--pumpkin);
-}
+.tagline { font-style: italic; color: var(--pumpkin); }
 
-/* Animations */
+/* Animations (shared) */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
 }
-
 @keyframes fadeInOut {
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
 }
-
 @keyframes flyBat1 {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
   25% { transform: translate(100px, 50px) rotate(-15deg); }
   50% { transform: translate(200px, -20px) rotate(10deg); }
   75% { transform: translate(100px, 30px) rotate(-10deg); }
 }
-
 @keyframes flyBat2 {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
   66% { transform: translate(-80px, -30px) rotate(-15deg); }
 }
-
 @keyframes flyBat3 {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
   50% { transform: translate(120px, 60px) rotate(-20deg); }
 }
-
 @keyframes wobble {
   0%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(-2deg); }
   75% { transform: rotate(2deg); }
 }
-
-@keyframes shamble {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(-30px) rotate(-5deg); }
-  50% { transform: translateX(-60px) rotate(5deg); }
-  75% { transform: translateX(-30px) rotate(-3deg); }
+@keyframes shambleAcross {
+  0%   { transform: translateX(0) rotate(0deg); right: -10%; opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translateX(-55vw) rotate(-3deg); }
+  80%  { transform: translateX(-75vw) rotate(2deg); }
+  100% { transform: translateX(-90vw) rotate(0deg); opacity: 0.6; }
+}
+@keyframes drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-35%); }
 }
